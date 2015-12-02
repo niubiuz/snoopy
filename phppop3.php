@@ -1,5 +1,5 @@
 <?php
-
+header("Content-Type:text/html;charset=utf-8");
 /* 
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
@@ -13,13 +13,15 @@
  *
  * pop3类来自wordpress
  */
- 
+for($k=1;$k<=25;$k++){
+//include "Snoopy.class.php";
+//$snoopy = new Snoopy;
+sleep(0.2);
 set_time_limit(0);
- 
-$mail_server = 'pop3.126.com';
+$mail_server = 'pop3.mxhichina.com';
 $mail_port = 110;
-$mail_user = 'cebaqmcx@126.com';
-$mail_pass = 'jydotfio';
+$mail_user = 'q'.$k.'@dazuxinxin.com';
+$mail_pass = 'Hello1234';
 $max_count = 1; //最多获取email数
 /*
 $mail_server = 'ssl://pop.gmail.com';
@@ -27,21 +29,50 @@ $mail_port = 995;
 $mail_user = 'quwei@gmail.com';
 $mail_pass = '****';
 */
- 
 $m =  new pop3mail();
 $list = $m->getlist($mail_server, $mail_port, $mail_user, $mail_pass, $max_count);
 if(!$list) {
 	echo $m->error;
 } else {
 	foreach($list as $row) {
-		//发件人：$row['author']
-            $row['subject']=mb_convert_encoding($row['subject'],"gbk","utf-8");
-            var_dump($row['subject']);
+	    //发件人：$row['author']
+            $row['all']=mb_convert_encoding($row['all'],"utf-8","gbk");
+            var_dump($row['all']);
+            $ll=$row['all'];
+            $u="Location:".$row['all'];
+            var_dump($u);
+            echo "<script language='javascript' type='text/javascript'>";  
+            //echo "window.open(".$ll.")";  
+            echo "window.open('$ll')";
+            echo "</script>"; 
+            //$file_contents = file_get_contents($row['all']); 
+            //echo $file_contents; 
+            
+            //$p="Location:https://www.baidu.com/s?wd=php%E9%A1%B5%E9%9D%A2%E8%B7%B3%E8%BD%AC%E4%BB%A3%E7%A0%81&rsp=5&f=3&oq=php%E8%B7%B3%E8%BD%AC%E5%88%B0%E6%8C%87%E5%AE%9A%E9%A1%B5%E9%9D%A2&ie=utf-8&rsv_idx=1&rsv_pq=e10834ed00091af5&rsv_t=f608%2FoM8jsyJpdTw4esN5Mbki%2Bk143OmnfPOsLCKkXGDQtIHmA6Gia9r960&rsv_ers=xn1&rs_src=0";
+            //header($u);
+            //header($p);
+            //$snoopy->fetch('http://bbs.scol.com.cn/');
+            //$ck=$snoopy->headers;
+            //foreach ($ck as $k=>$value){
+            //if (strpos($value,'Set-Cookie')!==FALSE){
+            //$arr=  explode(':', $value);
+            //$u=explode(';', $arr[1]);
+            //$v=explode('=', $u[0]);
+            //$snoopy->cookies[$v[0]]=$v[1];
+            //}
+            //}
+            //$snoopy->fetch($row['all']);
+            //$re =mb_convert_encoding($snoopy->results,"gbk","gbk");
+            //print_r($re);
+            //sleep(10);
+            //echo "。";
+            //echo "<br/>";
+            
 	}
 }
- 
+} 
 class pop3mail
-{
+{       
 	var $count;
 	var $result;
 	var $error;
@@ -67,19 +98,41 @@ class pop3mail
  
 		for ( $i = $count; $i > $count-1; $i-- ) {
 			$message = $pop3->get($i);
-                        foreach($message as $m=>$n){
+                        /*foreach($message as $m=>$n){
                             //$n=iconv_mime_decode($n, 2, "gbk");
                             $n=base64_decode($n);
                             $n=mb_convert_encoding($n, 'gbk', 'gbk');
                             var_dump($n);
-                            /*if(strpos($n,'http://bbs.scol.com.cn/member.php')!==FALSE){
+                            if(strpos($n,'http://bbs.scol.com.cn/member.php')!==FALSE){
                                var_dump($n);
-                            }*/
+                            }
+                            if(strpos($n,'(如果上面不')!==FALSE){
+                               var_dump($n);
+                            }
                           
                             //$n=mb_convert_encoding($n, 'gbk', 'gbk');
+                        
                             
-                        }
-                        //var_dump($message);
+                        }*/
+                        /*for($j=0;$j<=sizeof($message);$j++){
+                            $message[$j]=base64_decode($message[$j]);
+                        }*/
+                        var_dump(base64_decode($message[42]));
+                        var_dump(substr(base64_decode($message[41]),12));
+                        var_dump(substr(base64_decode($message[42]),0,-12));
+                        $bf=substr(base64_decode($message[41]),16);
+                        $af=trim(substr(base64_decode($message[42]),0,-21));
+                        //$url=substr(base64_decode($message[43]),12)+substr(base64_decode($message[44]),0,-12);
+                        var_dump($bf.$af);
+                        $all=str_replace("\n",'',$bf.$af);
+                        $all=str_replace(">","", $all);
+                        $all=str_replace("&amp;","&", $all);
+                        //$snoopy->fetch($bf.$af);
+                        //$re =mb_convert_encoding($snoopy->results,"utf-8","gbk");
+                        //print_r($re);
+                        //sleep(10);
+                        //echo "。";
+                        //echo "<br/>";
 			$bodysignal = false;
 			$boundary = '';
 			$charset = '';
@@ -149,7 +202,7 @@ class pop3mail
 			}
 			//$subject = trim($subject);
  
-			$post_data = compact('ddate','author', 'subject','lj');
+			$post_data = compact('ddate','author', 'subject','lj','all');
 			$maillists[] = $post_data;
  
 			/*
