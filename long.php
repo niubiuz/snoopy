@@ -1,5 +1,5 @@
 <?php
-//header("Content-Type:text/html;charset=utf-8");
+header("Content-Type:text/html;charset=utf-8");
 include "Snoopy.class.php";
 /* 
  * To change this license header, choose License Headers in Project Properties.
