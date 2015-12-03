@@ -13,10 +13,12 @@ header("Content-Type:text/html;charset=utf-8");
  *
  * pop3类来自wordpress
  */
-for($k=1;$k<=25;$k++){
-//include "Snoopy.class.php";
-//$snoopy = new Snoopy;
-sleep(0.2);
+include "Snoopy.class.php";
+$snoopy = new Snoopy;
+for($k=10;$k<=25;$k++){
+
+sleep(0.1);
+ignore_user_abort(); //即使Client断开(如关掉浏览器)，PHP脚本也可以继续执行。
 set_time_limit(0);
 $mail_server = 'pop3.mxhichina.com';
 $mail_port = 110;
@@ -41,10 +43,10 @@ if(!$list) {
             $ll=$row['all'];
             $u="Location:".$row['all'];
             var_dump($u);
-            echo "<script language='javascript' type='text/javascript'>";  
+            //echo "<script language='javascript' type='text/javascript'>";  
             //echo "window.open(".$ll.")";  
-            echo "window.open('$ll')";
-            echo "</script>"; 
+            //echo "window.open('$ll')";
+            //echo "</script>"; 
             //$file_contents = file_get_contents($row['all']); 
             //echo $file_contents; 
             
@@ -61,12 +63,17 @@ if(!$list) {
             //$snoopy->cookies[$v[0]]=$v[1];
             //}
             //}
-            //$snoopy->fetch($row['all']);
-            //$re =mb_convert_encoding($snoopy->results,"gbk","gbk");
+            
+            $snoopy->fetch($row['all']);
+            $open=fopen("logjh.log","a+" );
+            fwrite($open,mb_convert_encoding($snoopy->results,"utf-8","gbk").'\n');
+            fclose($open);
+            //$re =mb_convert_encoding($snoopy->results,"utf-8","gbk");
             //print_r($re);
-            //sleep(10);
-            //echo "。";
-            //echo "<br/>";
+            //sleep(0.2);
+            echo "。";
+            echo "<br/>";
+            
             
 	}
 }
@@ -120,8 +127,8 @@ class pop3mail
                         var_dump(base64_decode($message[42]));
                         var_dump(substr(base64_decode($message[41]),12));
                         var_dump(substr(base64_decode($message[42]),0,-12));
-                        $bf=substr(base64_decode($message[41]),16);
-                        $af=trim(substr(base64_decode($message[42]),0,-21));
+                        $bf=substr(base64_decode($message[41]),17);
+                        $af=trim(substr(base64_decode($message[42]),0,-20));
                         //$url=substr(base64_decode($message[43]),12)+substr(base64_decode($message[44]),0,-12);
                         var_dump($bf.$af);
                         $all=str_replace("\n",'',$bf.$af);
